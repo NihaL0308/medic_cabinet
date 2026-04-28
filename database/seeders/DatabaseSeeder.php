@@ -1,25 +1,31 @@
 <?php
+namespace Database\Factories;
 
-namespace Database\Seeders;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
+class UserFactory extends Factory {
+    public function definition(): array {
+        return [
+            'name'     => fake()->name(),
+            'email'    => fake()->unique()->safeEmail(),
+            'password' => Hash::make('password'),
+            'role'     => 'patient',
+            'phone'    => fake()->phoneNumber(),
+        ];
+    }
 
-class DatabaseSeeder extends Seeder
-{
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+    public function medecin(): static {
+        return $this->state(fn() => [
+            'role'       => 'medecin',
+            'specialite' => fake()->randomElement([
+                'Généraliste', 'Cardiologue', 'Pédiatre',
+                'Dermatologue', 'Ophtalmologue'
+            ]),
         ]);
+    }
+
+    public function admin(): static {
+        return $this->state(fn() => ['role' => 'admin']);
     }
 }
