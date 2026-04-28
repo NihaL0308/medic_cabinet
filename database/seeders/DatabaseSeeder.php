@@ -1,31 +1,65 @@
 <?php
-namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Service;
+use App\Models\Appointment;
 
-class UserFactory extends Factory {
-    public function definition(): array {
-        return [
-            'name'     => fake()->name(),
-            'email'    => fake()->unique()->safeEmail(),
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // =========================
+        // ADMIN
+        // =========================
+        User::create([
+            'name' => 'Youssef El Mansouri',
+            'email' => 'admin@cabinet.com',
             'password' => Hash::make('password'),
-            'role'     => 'patient',
-            'phone'    => fake()->phoneNumber(),
-        ];
-    }
-
-    public function medecin(): static {
-        return $this->state(fn() => [
-            'role'       => 'medecin',
-            'specialite' => fake()->randomElement([
-                'Généraliste', 'Cardiologue', 'Pédiatre',
-                'Dermatologue', 'Ophtalmologue'
-            ]),
+            'role' => 'admin'
         ]);
-    }
 
-    public function admin(): static {
-        return $this->state(fn() => ['role' => 'admin']);
+        // =========================
+        // MAIN DOCTOR
+        // =========================
+        User::factory()->medecin()->create([
+            'name' => 'Dr. Sara El Malki',
+            'email' => 'medecin@cabinet.com',
+        ]);
+
+        // =========================
+        // MAIN PATIENT
+        // =========================
+        User::create([
+            'name' => 'Omar Ait Lahcen',
+            'email' => 'patient@cabinet.ma',
+            'password' => Hash::make('password'),
+            'role' => 'patient'
+        ]);
+
+        // =========================
+        // RANDOM DOCTORS
+        // =========================
+        User::factory()->count(4)->medecin()->create();
+
+        // =========================
+        // RANDOM PATIENTS
+        // =========================
+        User::factory()->count(10)->create([
+            'role' => 'patient'
+        ]);
+
+        // =========================
+        // SERVICES
+        // =========================
+        Service::factory()->count(5)->create();
+
+        // =========================
+        // APPOINTMENTS
+        // =========================
+        Appointment::factory()->count(20)->create();
     }
 }
