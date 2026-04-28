@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -25,13 +26,10 @@ Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.swit
 
 // App (auth requise)
 Route::middleware('auth')->group(function () {
-    // ← supprimé : Route::get('/', ...)
     Route::resource('appointments', AppointmentController::class);
-    Route::resource('services', ServiceController::class);
-});
 
-Route::middleware('auth')->group(function () {
-    Route::resource('appointments', AppointmentController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('users', UserController::class); // ← ajouter
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('users', UserController::class)->except(['show', 'create']);
+        Route::resource('services', ServiceController::class)->except(['show', 'create']);
+    });
 });

@@ -1,74 +1,96 @@
-<p align="center">
-  <a href="https://laravel.com" target="_blank">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
-  </a>
-</p>
+# medic_cabinet
 
-## About Laravel
+Application Laravel de gestion d'un cabinet medical: utilisateurs, services et rendez-vous.
 
-Laravel is a web application framework with expressive, elegant syntax.
+## Prerequis
 
----
+- PHP 8.3+
+- Composer
+- Node.js et npm
+- MySQL ou MariaDB
 
-# 🏥 medic_cabinet
-
-Medical Cabinet Management System built with Laravel.
-
-## ⚙️ Installation
+## Installation
 
 ```bash
-git clone https://github.com/NihaL0308/medic_cabinet.git
+git clone <url-du-projet>
+cd medic_cabinet
+composer install
+cp .env.example .env
+php artisan key:generate
+```
 
+Configurez ensuite la base de donnees dans `.env`:
 
+```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=cab_med
 DB_USERNAME=root
 DB_PASSWORD=123456
+```
 
-les commandes utiliser :
-php artisan migrate
-php artisan db:seed
-php artisan migrate:fresh --seed
+Puis lancez:
+
+```bash
+php artisan migrate --seed
+npm install
+npm run build
 php artisan serve
+```
 
-name' => 'Omar Ait Lahcen',
-            'email' => 'patient@cabinet.ma',
-            'password' => Hash::make('password'),
-            'role' => 'patient'
-User::create([
-            'name' => 'Youssef El Mansouri',
-            'email' => 'admin@cabinet.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin'
-        ]);
+## Comptes utiles
 
-        User::factory()->medecin()->create([
-            'name' => 'Dr. Sara El Malki',
-            'email' => 'medecin@cabinet.com',
-        ]);
+Si vos seeders creent les comptes de demo, vous pouvez utiliser par exemple:
 
+- Admin: `admin@cabinet.com` / `password`
+- Patient: `patient@cabinet.ma` / `password`
+- Medecin: `medecin@cabinet.com` / `password`
+
+## Fonctionnalites
+
+- Authentification utilisateur
+- Gestion des rendez-vous
+- Gestion des services
+- Gestion des utilisateurs
+- API simple pour les rendez-vous
+
+## Routes principales
+
+- Web: `routes/web.php`
+- API: `routes/api.php`
+
+API rendez-vous disponible sur:
+
+- `GET /api/appointments`
+- `GET /api/appointments/{id}`
+- `POST /api/appointments`
+
+## Structure utile
+
+```text
 app/
-├── Http/
-│   ├── Controllers/
-│   │   ├── Api/
-│   │   │   └── AppointmentApiController.php
-│   │   ├── Auth/
-│   │   ├── AppointmentController.php
-│   │   ├── ServiceController.php
-│   │   └── UserController.php
-├── Models/
-│   ├── Appointment.php
-│   ├── Service.php
-│   └── User.php
-
-resources/
-└── views/
-    ├── appointments/
-    ├── services/
-    └── users/
-
+  Http/Controllers/
+    Api/AppointmentApiController.php
+    AppointmentController.php
+    ServiceController.php
+    UserController.php
+  Models/
+    Appointment.php
+    Service.php
+    User.php
+resources/views/
+  appointments/partials/
+  services/
+  users/
 routes/
-├── web.php
-└── api.php
+  api.php
+  web.php
+```
+
+## Tests rapides
+
+```bash
+php artisan route:list
+php artisan test
+```

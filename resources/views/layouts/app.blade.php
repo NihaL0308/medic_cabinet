@@ -95,6 +95,11 @@
             font-weight: 600;
         }
 
+        .sidebar .btn-light {
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
         /* ───── MAIN ───── */
         .main-content {
             margin-left: 260px;
@@ -225,22 +230,35 @@
     </div>
 
     <nav class="sidebar-nav">
+        <a href="{{ route('appointments.index') }}"
+           class="sidebar-link {{ request()->routeIs('appointments.*') ? 'active' : '' }}">
+            {{ __('app.appointments') }}
+        </a>
 
         @if(auth()->user()->isAdmin() || auth()->user()->isMedecin())
         <a href="{{ route('services.index') }}"
            class="sidebar-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
-             Services
+             {{ __('app.services') }}
         </a>
         @endif
 
         @if(auth()->user()->isAdmin())
         <a href="{{ route('users.index') }}"
            class="sidebar-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
-            Utilisateurs
+            {{ __('app.users') }}
         </a>
         @endif
 
     </nav>
+
+    <div class="p-3">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-light w-100">
+                {{ __('app.logout') }}
+            </button>
+        </form>
+    </div>
 </aside>
 
 <!-- MAIN -->

@@ -13,7 +13,7 @@
         </h5>
 
         @if($errors->any())
-            <div class="alert alert-danger">{{ $errors->first() }}</div>
+            <div>{{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('services.store') }}">

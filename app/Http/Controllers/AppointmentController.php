@@ -1,124 +1,226 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
-use App\Models\User;
 use App\Models\Service;
-use App\Mail\AppointmentConfirmation;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
-class AppointmentController extends Controller {
+class AppointmentController extends Controller
+{
+    public function index(Request $request)
+    {
+        $appointments = $this->appointmentsQuery($request)
+            ->latest('appointment_date')
+            ->latest('appointment_time')
+            ->get();
 
-    public function index(Request $request) {
-    $query = Appointment::with(['patient', 'medecin', 'service']);
+        if ($request->ajax()) {
+            return view('appointments.partials.table', compact('appointments'))->render();
+        }
 
-    if (auth()->user()->isPatient()) {
-        $query->where('patient_id', auth()->id());
-    } elseif (auth()->user()->isMedecin()) {
-        $query->where('medecin_id', auth()->id());
+        return view('appointments.partials.index', [
+            'appointments' => $appointments,
+            'patients' => User::where('role', 'patient')->orderBy('name')->get(),
+            'medecins' => User::where('role', 'medecin')->orderBy('name')->get(),
+            'services' => Service::orderBy('name')->get(),
+        ]);
     }
 
-    if ($search = $request->get('search')) {
-        $query->where(function($q) use ($search) {
-            $q->whereHas('patient',  fn($q) => $q->where('name', 'like', "%$search%"))
-              ->orWhereHas('medecin', fn($q) => $q->where('name', 'like', "%$search%"))
-              ->orWhereHas('service', fn($q) => $q->where('name', 'like', "%$search%"))
-              ->orWhere('statut', 'like', "%$search%");
-        });
+    public function create()
+    {
+        return view('appointments.partials.create', $this->formData());
     }
 
-    $appointments = $query->latest()->paginate(10);
+    public function store(Request $request)
+    {
+        $data = $this->validateAppointment($request, true);
 
-    if ($request->ajax()) {
-        return view('appointments.partials.table', compact('appointments'))->render();
+        Appointment::create($data);
+
+        return redirect()
+            ->route('appointments.index')
+            ->with('success', __('app.appointment_created'));
     }
 
-    // Données pour le modal
-    $medecins = \App\Models\User::where('role', 'medecin')->get();
-    $services = \App\Models\Service::all();
-    $patients = \App\Models\User::where('role', 'patient')->get();
+    public function show(Appointment $appointment)
+    {
+        $appointment->loadMissing(['patient', 'medecin', 'service']);
+        $this->authorizeView($appointment);
 
-    return view('appointments.index', compact('appointments', 'medecins', 'services', 'patients'));
-}
-
-    public function create() {
-        $medecins = User::where('role', 'medecin')->get();
-        $services = Service::all();
-        $patients = User::where('role', 'patient')->get();
-        return view('appointments.create', compact('medecins', 'services', 'patients'));
+        return view('appointments.partials.show', compact('appointment'));
     }
 
-public function store(Request $request) {
-    $data = $request->validate([
-        'patient_id'       => 'sometimes|exists:users,id',
-        'medecin_id'       => 'required|exists:users,id',
-        'service_id'       => 'required|exists:services,id',
-        'appointment_date' => 'required|date|after_or_equal:today',
-        'appointment_time' => 'required',
-        'notes'            => 'nullable|string|max:500',
-    ]);
+    public function edit(Appointment $appointment)
+    {
+        $appointment->loadMissing(['patient', 'medecin', 'service']);
+        $this->authorizeView($appointment);
 
-    if (auth()->user()->isPatient()) {
-        $data['patient_id'] = auth()->id();
+        return view('appointments.partials.edit', array_merge(
+            ['appointment' => $appointment],
+            $this->formData()
+        ));
     }
 
-    $appointment = Appointment::create($data);
+    public function update(Request $request, Appointment $appointment)
+    {
+        $appointment->loadMissing(['patient', 'medecin', 'service']);
+        $this->authorizeUpdate($appointment);
 
-    return redirect()->route('appointments.index')
-        ->with('success', __('app.appointment_created'));
-}
+        $data = $this->validateAppointment($request, false, $appointment);
+        $appointment->update($data);
 
-    public function show(Appointment $appointment) {
-        $this->authorizeAppointment($appointment);
-        return view('appointments.show', compact('appointment'));
+        return redirect()
+            ->route('appointments.index')
+            ->with('success', __('app.appointment_updated'));
     }
 
-    public function edit(Appointment $appointment) {
-        $this->authorizeAppointment($appointment);
-        $medecins = User::where('role', 'medecin')->get();
-        $services = Service::all();
-        $patients = User::where('role', 'patient')->get();
-        return view('appointments.edit', compact('appointment', 'medecins', 'services', 'patients'));
-    }
+    public function destroy(Appointment $appointment)
+    {
+        $this->authorizeCancel($appointment);
+        $appointment->update(['statut' => 'annule']);
 
-    public function update(Request $request, Appointment $appointment) {
-    $this->authorizeAppointment($appointment);
-    
-    $ancienStatut = $appointment->statut; // ← sauvegarder l'ancien statut
-    
-    $data = $request->validate([
-        'medecin_id'       => 'required|exists:users,id',
-        'service_id'       => 'required|exists:services,id',
-        'appointment_date' => 'required|date',
-        'appointment_time' => 'required',
-        'statut'           => 'required|in:en_attente,confirme,annule,termine',
-        'notes'            => 'nullable|string|max:500',
-    ]);
-
-    $appointment->update($data);
-
-    // ← Envoyer email seulement quand statut passe à "confirme"
-    if ($ancienStatut !== 'confirme' && $data['statut'] === 'confirme') {
-        try {
-            Mail::to($appointment->patient->email)
-                ->send(new AppointmentConfirmation($appointment));
-        } catch (\Exception $e) {}
-    }
-
-    return redirect()->route('appointments.index')
-        ->with('success', __('app.appointment_updated'));
-}
-
-    public function destroy(Appointment $appointment) {
-        $this->authorizeAppointment($appointment);
-        $appointment->delete();
-        return redirect()->route('appointments.index')
+        return redirect()
+            ->route('appointments.index')
             ->with('success', __('app.appointment_deleted'));
     }
 
-    private function authorizeAppointment(Appointment $a) {
-        if (auth()->user()->isPatient() && $a->patient_id !== auth()->id()) abort(403);
-        if (auth()->user()->isMedecin() && $a->medecin_id !== auth()->id()) abort(403);
+    private function appointmentsQuery(Request $request): Builder
+    {
+        $user = $request->user();
+        $search = trim((string) $request->input('search', ''));
+
+        $query = Appointment::query()->with(['patient', 'medecin', 'service']);
+
+        if ($user->isPatient()) {
+            $query->where('patient_id', $user->id);
+        } elseif ($user->isMedecin()) {
+            $query->where('medecin_id', $user->id);
+        }
+
+        if ($search !== '') {
+            $query->where(function (Builder $builder) use ($search) {
+                $builder->whereHas('patient', fn (Builder $query) => $query->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('medecin', fn (Builder $query) => $query->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('service', fn (Builder $query) => $query->where('name', 'like', "%{$search}%"))
+                    ->orWhere('statut', 'like', "%{$search}%")
+                    ->orWhere('appointment_date', 'like', "%{$search}%");
+            });
+        }
+
+        return $query;
+    }
+
+    private function formData(): array
+    {
+        return [
+            'patients' => User::where('role', 'patient')->orderBy('name')->get(),
+            'medecins' => User::where('role', 'medecin')->orderBy('name')->get(),
+            'services' => Service::orderBy('name')->get(),
+        ];
+    }
+
+    private function validateAppointment(Request $request, bool $isCreate, ?Appointment $appointment = null): array
+    {
+        $user = $request->user();
+
+        $rules = [
+            'patient_id' => ['required', 'exists:users,id'],
+            'medecin_id' => ['required', 'exists:users,id'],
+            'service_id' => ['required', 'exists:services,id'],
+            'appointment_date' => ['required', 'date', 'after_or_equal:today'],
+            'appointment_time' => ['required', 'date_format:H:i'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ];
+
+        if (! $isCreate) {
+            $rules['statut'] = ['required', 'in:en_attente,confirme,annule,termine'];
+        }
+
+        $data = $request->validate($rules);
+
+        if ($user->isPatient()) {
+            $data['patient_id'] = $user->id;
+        }
+
+        if ($user->isMedecin()) {
+            $data['medecin_id'] = $appointment?->medecin_id ?? $data['medecin_id'];
+            $data['patient_id'] = $appointment?->patient_id ?? $data['patient_id'];
+            $data['service_id'] = $appointment?->service_id ?? $data['service_id'];
+            $data['appointment_date'] = $appointment?->appointment_date?->format('Y-m-d') ?? $data['appointment_date'];
+            $data['appointment_time'] = $appointment?->appointment_time ?? $data['appointment_time'];
+            $data['notes'] = $appointment?->notes ?? $data['notes'];
+        }
+
+        if ($isCreate) {
+            $data['statut'] = 'en_attente';
+        } elseif ($user->isPatient()) {
+            $data['medecin_id'] = $appointment->medecin_id;
+            $data['service_id'] = $appointment->service_id;
+            $data['appointment_date'] = $appointment->appointment_date->format('Y-m-d');
+            $data['appointment_time'] = $appointment->appointment_time;
+            $data['notes'] = $appointment->notes;
+            $data['statut'] = 'annule';
+        } elseif ($user->isMedecin()) {
+            $allowedStatuses = ['confirme', 'termine', 'annule'];
+            abort_unless(in_array($data['statut'], $allowedStatuses, true), 422);
+        }
+
+        return $data;
+    }
+
+    private function authorizeView(Appointment $appointment): void
+    {
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if ($user->isPatient() && $appointment->patient_id === $user->id) {
+            return;
+        }
+
+        if ($user->isMedecin() && $appointment->medecin_id === $user->id) {
+            return;
+        }
+
+        abort(403);
+    }
+
+    private function authorizeUpdate(Appointment $appointment): void
+    {
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if ($user->isPatient() && $appointment->patient_id === $user->id) {
+            return;
+        }
+
+        if ($user->isMedecin() && $appointment->medecin_id === $user->id) {
+            return;
+        }
+
+        abort(403);
+    }
+
+    private function authorizeCancel(Appointment $appointment): void
+    {
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if ($user->isPatient() && $appointment->patient_id === $user->id) {
+            return;
+        }
+
+        abort(403);
     }
 }

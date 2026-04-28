@@ -29,9 +29,9 @@
                     <p class="text-muted small mb-1">
                         {{ __('app.patient') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->patient->name }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->patient->email }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->patient->phone }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->patient?->name ?? '-' }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->patient?->email ?? '-' }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->patient?->phone ?? '-' }}</p>
                 </div>
             </div>
 
@@ -40,8 +40,8 @@
                     <p class="text-muted small mb-1">
                         {{ __('app.doctor') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->medecin->name }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->medecin->specialite }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->medecin?->name ?? '-' }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->medecin?->specialite ?? '-' }}</p>
                 </div>
             </div>
 
@@ -50,11 +50,11 @@
                     <p class="text-muted small mb-1">
                        {{ __('app.service') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->service->name }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->service?->name ?? '-' }}</p>
                     <p class="text-muted small mb-0">
-                        {{ $appointment->service->duree_minutes }} {{ __('app.minutes') }}
-                        @if($appointment->service->prix)
-                            — {{ $appointment->service->prix }} MAD
+                        {{ $appointment->service?->duree_minutes ?? '-' }} {{ __('app.minutes') }}
+                        @if($appointment->service?->prix)
+                            - {{ $appointment->service->prix }} MAD
                         @endif
                     </p>
                 </div>
@@ -85,11 +85,11 @@
 
         <div class="d-flex gap-2 mt-4">
 
-            <a href="{{ route('appointments.edit', $appointment) }}" >
+            <a href="{{ route('appointments.edit', $appointment) }}" class="btn btn-outline-primary">
                 {{ __('app.edit') }}
             </a>
 
-            <a href="{{ route('appointments.index') }}">
+            <a href="{{ route('appointments.index') }}" class="btn btn-outline-secondary">
                 {{ __('app.back') }}
             </a>
 
