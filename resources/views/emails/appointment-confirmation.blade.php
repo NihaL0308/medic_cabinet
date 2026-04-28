@@ -1,22 +1,21 @@
 <x-mail::message>
-# Confirmation de votre rendez-vous
+# {{ __('app.email_appointment_subject') }}
 
-Bonjour **{{ $appointment->patient->name }}**,
+{{ __('app.email_greeting', ['name' => $appointment->patient->name]) }}
 
-Votre rendez-vous a été enregistré avec succès.
+{{ __('app.email_appointment_saved') }}
 
 <x-mail::panel>
-**Médecin :** {{ $appointment->medecin->name }} ({{ $appointment->medecin->specialite }})  
-**Service :** {{ $appointment->service->name }}  
-**Date :** {{ $appointment->appointment_date->format('d/m/Y') }}  
-**Heure :** {{ $appointment->appointment_time }}
+**{{ __('app.email_doctor') }}:** {{ $appointment->medecin->name }} ({{ $appointment->medecin->specialite }})  
+**{{ __('app.email_service') }}:** {{ $appointment->service->name }}  
+**{{ __('app.email_date') }}:** {{ $appointment->appointment_date->format('d/m/Y') }}  
+**{{ __('app.email_time') }}:** {{ $appointment->appointment_time }}
 @if($appointment->notes)
-**Notes :** {{ $appointment->notes }}
+**{{ __('app.email_notes') }}:** {{ $appointment->notes }}
 @endif
 </x-mail::panel>
 
-En cas de besoin, veuillez nous contacter.
+{{ __('app.email_contact') }}
 
-Cordialement,  
-**L'équipe du Cabinet Médical**
+**{{ __('app.email_signature') }}**
 </x-mail::message>

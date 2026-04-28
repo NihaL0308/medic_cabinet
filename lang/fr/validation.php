@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'accepted' => 'Le champ :attribute doit etre accepte.',
+    'confirmed' => 'La confirmation du champ :attribute ne correspond pas.',
+    'date' => 'Le champ :attribute doit etre une date valide.',
+    'date_format' => 'Le champ :attribute ne correspond pas au format :format.',
+    'email' => 'Le champ :attribute doit etre une adresse email valide.',
+    'exists' => 'La valeur selectionnee pour :attribute est invalide.',
+    'in' => 'La valeur selectionnee pour :attribute est invalide.',
+    'integer' => 'Le champ :attribute doit etre un entier.',
+    'max' => [
+        'numeric' => 'Le champ :attribute ne doit pas etre superieur a :max.',
+        'string' => 'Le champ :attribute ne doit pas depasser :max caracteres.',
+    ],
+    'min' => [
+        'numeric' => 'Le champ :attribute doit etre au minimum de :min.',
+        'string' => 'Le champ :attribute doit contenir au moins :min caracteres.',
+    ],
+    'numeric' => 'Le champ :attribute doit etre un nombre.',
+    'required' => 'Le champ :attribute est obligatoire.',
+    'string' => 'Le champ :attribute doit etre une chaine de caracteres.',
+    'unique' => 'Le champ :attribute est deja utilise.',
+    'after_or_equal' => 'Le champ :attribute doit etre une date posterieure ou egale au :date.',
+
+    'attributes' => [
+        'name' => 'nom',
+        'email' => 'email',
+        'phone' => 'telephone',
+        'password' => 'mot de passe',
+        'password_confirmation' => 'confirmation du mot de passe',
+        'role' => 'role',
+        'specialite' => 'specialite',
+        'patient_id' => 'patient',
+        'medecin_id' => 'medecin',
+        'service_id' => 'service',
+        'appointment_date' => 'date du rendez-vous',
+        'appointment_time' => 'heure du rendez-vous',
+        'statut' => 'statut',
+        'notes' => 'notes',
+        'description' => 'description',
+        'duree_minutes' => 'duree',
+        'prix' => 'prix',
+    ],
+];

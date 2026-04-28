@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Inscription')
+@section('title', __('app.register'))
 
 @section('content')
 
@@ -109,7 +109,7 @@
 
     <div class="icon">📝</div>
 
-    <h2>Créer un compte</h2>
+    <h2>{{ __('app.register_submit') }}</h2>
 
     @if($errors->any())
         <div class="alert">{{ $errors->first() }}</div>
@@ -118,32 +118,32 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <label class="form-label">Nom </label>
+        <label class="form-label">{{ __('app.full_name') }}</label>
         <input type="text" name="name" class="form-control"
             value="{{ old('name') }}" required>
 
-        <label class="form-label">Email</label>
+        <label class="form-label">{{ __('app.email') }}</label>
         <input type="email" name="email" class="form-control"
             value="{{ old('email') }}" required>
 
-        <label class="form-label">Tél</label>
+        <label class="form-label">{{ __('app.phone') }}</label>
         <input type="text" name="phone" class="form-control"
             value="{{ old('phone') }}">
 
-        <label class="form-label">Mot de passe</label>
+        <label class="form-label">{{ __('app.password') }}</label>
         <input type="password" name="password" class="form-control" required>
 
-        <label class="form-label">Confirmer le mot de passe</label>
+        <label class="form-label">{{ __('app.confirm_password') }}</label>
         <input type="password" name="password_confirmation" class="form-control" required>
 
         <button type="submit" class="btn-auth">
-            S'inscrire
+            {{ __('app.register_submit') }}
         </button>
     </form>
 
     <div class="auth-footer">
-        Déjà un compte ?
-        <a href="{{ route('login') }}">Se connecter</a>
+        {{ __('app.already_have_account') }}
+        <a href="{{ route('login') }}">{{ __('app.go_to_login') }}</a>
     </div>
 
 </div>

@@ -43,7 +43,7 @@ class ServiceApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Service cree avec succes.',
+            'message' => __('app.api_service_created'),
             'data' => $this->format($service),
         ], 201);
     }
@@ -54,7 +54,7 @@ class ServiceApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Service mis a jour.',
+            'message' => __('app.api_service_updated'),
             'data' => $this->format($service->fresh()),
         ]);
     }
@@ -65,7 +65,7 @@ class ServiceApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Service supprime.',
+            'message' => __('app.api_service_deleted'),
         ]);
     }
 

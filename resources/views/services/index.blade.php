@@ -22,7 +22,7 @@
                 <i class="fas fa-search text-primary"></i>
             </span>
             <input type="text" name="search" class="form-control" value="{{ $search }}" placeholder="{{ __('app.search_services') }}">
-            <button class="btn btn-outline-secondary" type="submit">{{ __('app.show') }}</button>
+            <button class="btn btn-outline-secondary" type="submit">{{ __('app.search') }}</button>
         </div>
     </div>
 </form>
@@ -46,7 +46,7 @@
                             <td class="fw-semibold">{{ $service->name }}</td>
                             <td class="text-muted">{{ $service->description ?: '-' }}</td>
                             <td>{{ $service->duree_minutes }} {{ __('app.minutes') }}</td>
-                            <td>{{ $service->prix ? number_format((float) $service->prix, 2) . ' MAD' : '-' }}</td>
+                            <td>{{ $service->prix ? number_format((float) $service->prix, 2) . ' ' . __('app.currency') : '-' }}</td>
                             <td class="text-end">
                                 <a href="{{ route('services.edit', $service) }}" class="btn btn-sm btn-outline-primary">{{ __('app.edit') }}</a>
                                 <button class="btn btn-sm btn-outline-danger btn-delete-service" data-url="{{ route('services.destroy', $service) }}" data-name="{{ $service->name }}">

@@ -7,7 +7,7 @@ Application Laravel de gestion d'un cabinet medical: utilisateurs, services et r
 - PHP 8.3+
 - Composer
 - Node.js et npm
-- MySQL ou MariaDB
+- MySQL 
 
 ## Installation
 

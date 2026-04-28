@@ -62,7 +62,7 @@ class AppointmentApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Rendez-vous cree avec succes.',
+            'message' => __('app.api_appointment_created'),
             'data' => $this->format($appointment),
         ], 201);
     }

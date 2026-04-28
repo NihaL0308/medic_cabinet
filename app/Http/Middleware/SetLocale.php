@@ -12,7 +12,7 @@ class SetLocale {
             $locale = 'fr';
         }
 
-        if (!in_array($locale, ['fr', 'ar'])) {
+        if (!in_array($locale, ['fr', 'en'])) {
             $locale = 'fr';
         }
 

@@ -31,7 +31,7 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service cree avec succes.');
+            ->with('success', __('app.service_created'));
     }
 
     public function edit(Service $service)
@@ -45,7 +45,7 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service mis a jour.');
+            ->with('success', __('app.service_updated'));
     }
 
     public function destroy(Service $service)
@@ -54,7 +54,7 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Service supprime.');
+            ->with('success', __('app.service_deleted'));
     }
 
     private function validateService(Request $request): array

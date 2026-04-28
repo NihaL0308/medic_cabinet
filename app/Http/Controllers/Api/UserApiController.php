@@ -47,7 +47,7 @@ class UserApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Utilisateur cree avec succes.',
+            'message' => __('app.api_user_created'),
             'data' => $this->format($user),
         ], 201);
     }
@@ -59,7 +59,7 @@ class UserApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Utilisateur mis a jour.',
+            'message' => __('app.api_user_updated'),
             'data' => $this->format($user->fresh()),
         ]);
     }
@@ -69,7 +69,7 @@ class UserApiController extends Controller
         if ($user->id === auth()->id()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Vous ne pouvez pas supprimer votre propre compte.',
+                'message' => __('app.cannot_delete_self'),
             ], 422);
         }
 
@@ -77,7 +77,7 @@ class UserApiController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Utilisateur supprime.',
+            'message' => __('app.api_user_deleted'),
         ]);
     }
 

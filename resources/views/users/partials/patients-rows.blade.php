@@ -2,7 +2,7 @@
 <tr>
     <td class="fw-semibold">{{ $u->name }}</td>
     <td class="text-muted">{{ $u->email }}</td>
-    <td>{{ $u->phone ?? '-' }}</td>
+    <td>{{ $u->phone ?? __('app.not_available') }}</td>
 
     <td>
         <a href="{{ route('users.edit', $u) }}" class="btn btn-sm btn-outline-primary">

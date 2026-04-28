@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'accepted' => 'The :attribute must be accepted.',
+    'confirmed' => 'The :attribute confirmation does not match.',
+    'date' => 'The :attribute is not a valid date.',
+    'date_format' => 'The :attribute does not match the format :format.',
+    'email' => 'The :attribute must be a valid email address.',
+    'exists' => 'The selected :attribute is invalid.',
+    'in' => 'The selected :attribute is invalid.',
+    'integer' => 'The :attribute must be an integer.',
+    'max' => [
+        'numeric' => 'The :attribute must not be greater than :max.',
+        'string' => 'The :attribute must not be greater than :max characters.',
+    ],
+    'min' => [
+        'numeric' => 'The :attribute must be at least :min.',
+        'string' => 'The :attribute must be at least :min characters.',
+    ],
+    'numeric' => 'The :attribute must be a number.',
+    'required' => 'The :attribute field is required.',
+    'string' => 'The :attribute must be a string.',
+    'unique' => 'The :attribute has already been taken.',
+    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
+
+    'attributes' => [
+        'name' => 'name',
+        'email' => 'email',
+        'phone' => 'phone',
+        'password' => 'password',
+        'password_confirmation' => 'password confirmation',
+        'role' => 'role',
+        'specialite' => 'specialty',
+        'patient_id' => 'patient',
+        'medecin_id' => 'doctor',
+        'service_id' => 'service',
+        'appointment_date' => 'appointment date',
+        'appointment_time' => 'appointment time',
+        'statut' => 'status',
+        'notes' => 'notes',
+        'description' => 'description',
+        'duree_minutes' => 'duration',
+        'prix' => 'price',
+    ],
+];

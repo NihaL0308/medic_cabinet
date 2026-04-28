@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Modifier service')
+@section('title', __('app.edit_service'))
 
 @section('content')
 
@@ -9,7 +9,7 @@
     <div class="card-body p-4">
 
         <h5 class="fw-bold mb-4 text-primary">
-            Modifier le service
+            {{ __('app.edit_service') }}
         </h5>
 
         @if($errors->any())
@@ -21,26 +21,26 @@
             @method('PUT')
 
             <div class="mb-3">
-                <label class="form-label text-primary">Nom</label>
+                <label class="form-label text-primary">{{ __('app.name') }}</label>
                 <input type="text" name="name" class="form-control focus-blue"
                        value="{{ $service->name }}" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-primary">Description</label>
+                <label class="form-label text-primary">{{ __('app.description') }}</label>
                 <textarea name="description" class="form-control focus-blue" rows="3">{{ $service->description }}</textarea>
             </div>
 
             <div class="row g-3">
 
                 <div class="col-md-6">
-                    <label class="form-label text-primary">Durée (minutes)</label>
+                    <label class="form-label text-primary">{{ __('app.duration') }}</label>
                     <input type="number" name="duree_minutes" class="form-control focus-blue"
                            value="{{ $service->duree_minutes }}" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label text-primary">Prix (MAD)</label>
+                    <label class="form-label text-primary">{{ __('app.price') }}</label>
                     <input type="number" name="prix" class="form-control focus-blue"
                            value="{{ $service->prix }}" step="0.01">
                 </div>
@@ -50,11 +50,11 @@
             <div class="d-flex gap-2 mt-4">
 
                 <button class="btn btn-primary">
-                    Mettre à jour
+                    {{ __('app.update') }}
                 </button>
 
                 <a href="{{ route('services.index') }}" class="btn btn-outline-secondary">
-                    Annuler
+                    {{ __('app.cancel') }}
                 </a>
 
             </div>

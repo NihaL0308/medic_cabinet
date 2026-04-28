@@ -29,9 +29,9 @@
                     <p class="text-muted small mb-1">
                         {{ __('app.patient') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->patient?->name ?? '-' }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->patient?->email ?? '-' }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->patient?->phone ?? '-' }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->patient?->name ?? __('app.not_available') }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->patient?->email ?? __('app.not_available') }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->patient?->phone ?? __('app.not_available') }}</p>
                 </div>
             </div>
 
@@ -40,8 +40,8 @@
                     <p class="text-muted small mb-1">
                         {{ __('app.doctor') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->medecin?->name ?? '-' }}</p>
-                    <p class="text-muted small mb-0">{{ $appointment->medecin?->specialite ?? '-' }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->medecin?->name ?? __('app.not_available') }}</p>
+                    <p class="text-muted small mb-0">{{ $appointment->medecin?->specialite ?? __('app.not_available') }}</p>
                 </div>
             </div>
 
@@ -50,11 +50,11 @@
                     <p class="text-muted small mb-1">
                        {{ __('app.service') }}
                     </p>
-                    <p class="fw-semibold mb-0">{{ $appointment->service?->name ?? '-' }}</p>
+                    <p class="fw-semibold mb-0">{{ $appointment->service?->name ?? __('app.not_available') }}</p>
                     <p class="text-muted small mb-0">
-                        {{ $appointment->service?->duree_minutes ?? '-' }} {{ __('app.minutes') }}
+                        {{ $appointment->service?->duree_minutes ?? __('app.not_available') }} {{ __('app.minutes') }}
                         @if($appointment->service?->prix)
-                            - {{ $appointment->service->prix }} MAD
+                            - {{ $appointment->service->prix }} {{ __('app.currency') }}
                         @endif
                     </p>
                 </div>

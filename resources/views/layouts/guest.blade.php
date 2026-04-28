@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'medic_cabinet')</title>
+    <title>@yield('title', __('app.brand_name'))</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -174,8 +174,8 @@
         <div class="auth-icon">
             <i class="fas fa-hospital"></i>
         </div>
-        <h1>medic_cabinet</h1>
-        <p>Gestiondes rendez-vous</p>
+        <h1>{{ __('app.brand_name') }}</h1>
+        <p>{{ __('app.brand_tagline') }}</p>
     </div>
 
     <div class="auth-card">
@@ -185,7 +185,7 @@
     </div>
 
     <a href="/" class="back-link">
-        <i class="fas fa-arrow-left"></i> /*retour*/
+        <i class="fas fa-arrow-left"></i> {{ __('app.back_home') }}
     </a>
 
 </div>

@@ -22,7 +22,7 @@
                 <i class="fas fa-search text-primary"></i>
             </span>
             <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="{{ __('app.search_users') }}">
-            <button class="btn btn-outline-secondary" type="submit">{{ __('app.show') }}</button>
+            <button class="btn btn-outline-secondary" type="submit">{{ __('app.search') }}</button>
         </div>
     </div>
 </form>

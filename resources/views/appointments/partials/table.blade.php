@@ -13,9 +13,9 @@
         <tbody>
             @forelse($appointments as $appointment)
                 <tr>
-                    <td>{{ $appointment->patient?->name ?? '-' }}</td>
-                    <td>{{ $appointment->medecin?->name ?? '-' }}</td>
-                    <td>{{ $appointment->service?->name ?? '-' }}</td>
+                    <td>{{ $appointment->patient?->name ?? __('app.not_available') }}</td>
+                    <td>{{ $appointment->medecin?->name ?? __('app.not_available') }}</td>
+                    <td>{{ $appointment->service?->name ?? __('app.not_available') }}</td>
                     <td>
                         {{ optional($appointment->appointment_date)->format('d/m/Y') }}
                         <div class="text-muted small">{{ $appointment->appointment_time }}</div>

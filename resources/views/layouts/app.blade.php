@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="{{ app()->getLocale() }}" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'medic_cabinet')</title>
+    <title>@yield('title', __('app.brand_name'))</title>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
@@ -121,6 +121,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
         }
 
         .topbar-title {
@@ -152,6 +153,52 @@
 
         .user-name {
             font-size: 14px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .language-switcher .dropdown-toggle {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: var(--text);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .language-switcher .dropdown-toggle:hover,
+        .language-switcher .dropdown-toggle:focus {
+            background: #eef4ff;
+            border-color: #cbd5e1;
+            color: var(--primary);
+        }
+
+        .language-switcher .dropdown-menu {
+            border: none;
+            border-radius: 14px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+            padding: 8px;
+            min-width: 160px;
+        }
+
+        .language-switcher .dropdown-item {
+            border-radius: 10px;
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .language-switcher .dropdown-item.active,
+        .language-switcher .dropdown-item:active {
+            background: #eef4ff;
+            color: var(--primary);
         }
 
         /* ───── CONTENT ───── */
@@ -215,6 +262,17 @@
             border-top: 1px solid #e5e7eb;
         }
 
+        @media (max-width: 768px) {
+            .topbar {
+                flex-wrap: wrap;
+            }
+
+            .topbar-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
     </style>
 
     @stack('styles')
@@ -226,7 +284,7 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <span class="brand-dot"></span>
-        medic_cabinet
+        {{ __('app.brand_name') }}
     </div>
 
     <nav class="sidebar-nav">
@@ -268,11 +326,42 @@
     <div class="topbar">
         <div class="topbar-title">@yield('page-title')</div>
 
-        <div class="user-menu-btn dropdown">
-            <div class="user-avatar">
-                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+        <div class="topbar-actions">
+            <div class="dropdown language-switcher">
+                <button
+                    class="btn dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    {{ __('app.language_short_' . app()->getLocale()) }}
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a
+                            class="dropdown-item {{ app()->getLocale() === 'fr' ? 'active' : '' }}"
+                            href="{{ route('lang.switch', 'fr') }}">
+                            <span>{{ __('app.language_french') }}</span>
+                            <strong>{{ __('app.language_short_fr') }}</strong>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}"
+                            href="{{ route('lang.switch', 'en') }}">
+                            <span>{{ __('app.language_english') }}</span>
+                            <strong>{{ __('app.language_short_en') }}</strong>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <span class="user-name">{{ auth()->user()->name }}</span>
+
+            <div class="user-menu-btn dropdown">
+                <div class="user-avatar">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                </div>
+                <span class="user-name">{{ auth()->user()->name }}</span>
+            </div>
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 
 @extends('layouts.guest')
-@section('title', 'Connexion')
+@section('title', __('app.login'))
 
 @section('content')
 
@@ -119,7 +119,7 @@
 
     <div class="icon">🏥</div>
 
-    <h2>Connexion</h2>
+    <h2>{{ __('app.login') }}</h2>
 
     @if($errors->any())
         <div class="alert">{{ $errors->first() }}</div>
@@ -128,25 +128,25 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <label class="form-label">Email</label>
+        <label class="form-label">{{ __('app.email') }}</label>
         <input type="email" name="email" class="form-control"
             value="{{ old('email') }}" required autofocus>
 
-        <label class="form-label">Mot de passe</label>
+        <label class="form-label">{{ __('app.password') }}</label>
         <input type="password" name="password" class="form-control" required>
 
         <div class="remember">
             <input type="checkbox" name="remember" id="remember">
-            <label for="remember">Rester connecté</label>
+            <label for="remember">{{ __('app.remember_me') }}</label>
         </div>
 
         <button type="submit" class="btn-auth">
-            Se connecter
+            {{ __('app.login_submit') }}
         </button>
     </form>
 
     <div class="auth-footer">
-        <a href="{{ route('register') }}">S'inscrire</a>
+        <a href="{{ route('register') }}">{{ __('app.go_to_register') }}</a>
     </div>
 
 </div>
