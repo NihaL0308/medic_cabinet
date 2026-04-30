@@ -24,6 +24,10 @@ class User extends Authenticatable {
         return $this->hasMany(Appointment::class, 'medecin_id');
     }
 
+    public function services() {
+        return $this->hasMany(Service::class, 'medecin_id');
+    }
+
     public function isMedecin(): bool { return $this->role === 'medecin'; }
     public function isPatient(): bool { return $this->role === 'patient'; }
     public function isAdmin(): bool   { return $this->role === 'admin'; }

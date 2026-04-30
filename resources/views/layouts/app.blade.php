@@ -296,7 +296,7 @@
         @if(auth()->user()->isAdmin() || auth()->user()->isMedecin())
         <a href="{{ route('services.index') }}"
            class="sidebar-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
-             {{ __('app.services') }}
+             {{ auth()->user()->isMedecin() ? __('app.my_services') : __('app.services') }}
         </a>
         @endif
 

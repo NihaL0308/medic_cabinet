@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AppointmentController extends Controller
 {
@@ -115,10 +116,16 @@ class AppointmentController extends Controller
 
     private function formData(): array
     {
+        $user = auth()->user();
+
         return [
             'patients' => User::where('role', 'patient')->orderBy('name')->get(),
             'medecins' => User::where('role', 'medecin')->orderBy('name')->get(),
-            'services' => Service::orderBy('name')->get(),
+            'services' => Service::query()
+                ->with('medecin:id,name')
+                ->when($user?->isMedecin(), fn (Builder $query) => $query->where('medecin_id', $user->id))
+                ->orderBy('name')
+                ->get(),
         ];
     }
 
@@ -166,6 +173,14 @@ class AppointmentController extends Controller
         } elseif ($user->isMedecin()) {
             $allowedStatuses = ['confirme', 'termine', 'annule'];
             abort_unless(in_array($data['statut'], $allowedStatuses, true), 422);
+        }
+
+        $service = Service::query()->findOrFail($data['service_id']);
+
+        if ($service->medecin_id !== null && (int) $service->medecin_id !== (int) $data['medecin_id']) {
+            throw ValidationException::withMessages([
+                'service_id' => __('validation.exists', ['attribute' => 'service']),
+            ]);
         }
 
         return $data;

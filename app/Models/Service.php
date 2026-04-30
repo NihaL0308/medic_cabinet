@@ -10,11 +10,17 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
+        'medecin_id',
         'name',
         'description',
         'duree_minutes',
         'prix',
     ];
+
+    public function medecin()
+    {
+        return $this->belongsTo(User::class, 'medecin_id');
+    }
 
     public function appointments()
     {

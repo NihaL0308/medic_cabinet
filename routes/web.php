@@ -28,8 +28,11 @@ Route::get('/lang/{locale}', [LangController::class, 'switch'])->name('lang.swit
 Route::middleware('auth')->group(function () {
     Route::resource('appointments', AppointmentController::class);
 
+    Route::middleware('role:admin,medecin')->group(function () {
+        Route::resource('services', ServiceController::class)->except(['show']);
+    });
+
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class)->except(['show', 'create']);
-        Route::resource('services', ServiceController::class)->except(['show', 'create']);
     });
 });
